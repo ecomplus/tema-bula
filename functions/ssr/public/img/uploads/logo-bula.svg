@@ -1,0 +1,33 @@
+<!--
+  Wordmark placeholder da variante "Bula" (farmácia e saúde) — FONTE EDITÁVEL.
+  A loja serve o PNG gerado daqui: o `Picture` do storefront passa a imagem
+  pelo serviço de imagem do Astro, que rejeita `svg+xml`.
+
+  Regerar após editar:
+    cd .../public/img/uploads
+    node /home/vitorrgg/demo-catalog/scripts/rasterize.mjs \
+      /home/vitorrgg/store-bula/functions/ssr \
+      logo-bula.svg logo-bula.png 1200
+
+  IMPORTANTE: trocar o PNG e rebuildar NÃO troca a imagem servida — o Astro
+  reaproveita a entrada de cache. Rodar `scripts/limpar-cache-imagens.sh` antes
+  do build. Custou um ciclo de print para descobrir.
+
+  O desenho é uma caixa de remédio com a faixa atravessada — a tarja, que é o
+  átomo do tema. A faixa é TURQUESA, não vermelha, e isso é deliberado: a regra
+  do tema é que vermelho significa "venda sob prescrição" e nada mais (ver
+  `assets/style.css`). Um vermelho na marca ensinaria o cliente a ignorar
+  justamente a cor que ele precisa ler no card.
+
+  Linha de apoio em 10px porque o logo é servido em `max-w-[210px]`: a caixa de
+  300 unidades encolhe para ~0,7×, e abaixo disso a linha vira borrão.
+
+  Fontes são as instaladas no ambiente que rasteriza (DejaVu/Ubuntu), não a
+  Atkinson Hyperlegible do tema — o rasterizador não a tem.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" width="300" height="72" role="img" aria-label="Bula">
+  <rect x="10" y="15" width="36" height="42" rx="5" fill="#00303a" />
+  <rect x="10" y="31" width="36" height="10" fill="#00868f" />
+  <text x="60" y="41" font-family="Ubuntu Sans, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#00303a" letter-spacing="1">BULA</text>
+  <text x="62" y="58" font-family="DejaVu Sans, system-ui, sans-serif" font-size="10" font-weight="600" fill="#4a5f68" letter-spacing="1.8">FARMÁCIA E SAÚDE</text>
+</svg>

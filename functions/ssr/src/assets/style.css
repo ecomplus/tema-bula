@@ -1,4 +1,61 @@
+/*
+ * Design system da variante Bula (farmácia e saúde).
+ *
+ * O eixo do tema é EQUIVALÊNCIA. Em nenhum outro nicho do conjunto o cliente
+ * chega procurando um produto e a resposta certa é OUTRO produto: ele digita o
+ * nome comercial que viu na receita e a loja precisa mostrar que a mesma
+ * substância, na mesma dosagem, existe por metade do preço. É a única variante
+ * em que a vitrine ajuda o cliente a NÃO comprar o que ele pediu.
+ *
+ * ── COMO ISSO SE SEPARA DAS OUTRAS VARIANTES DE ESPECIFICAÇÃO ────────────
+ * O conjunto já tem quatro temas que lidam com ficha técnica, e o risco de
+ * repetição é real — foi o que aconteceu entre Bitola e Circuito. O corte:
+ *
+ *   - Bitola (construção): qual peça SERVE.          Especificação = filtro.
+ *   - Cardan (autopeças):  serve no MEU carro.       Especificação = compatibilidade.
+ *   - Circuito (eletro):   qual é mais BARATO.       Especificação = ficha.
+ *   - Cadência (esporte):  qual é MELHOR PRA MIM.    Especificação = comparação.
+ *   - Bula (farmácia):     é o MESMO, mais barato?   Especificação = equivalência.
+ *
+ * A Cadência compara produtos DIFERENTES para escolher um. A Bula compara
+ * produtos que são o MESMO para escolher o mais barato. Comparador mostra
+ * diferença; equivalente mostra identidade.
+ *
+ * ── VERMELHO É TARJA, NUNCA MARCA ────────────────────────────────────────
+ * A faixa colorida da caixa de remédio é informação legal, não decoração:
+ * vermelha é venda sob prescrição, preta é controlada. Um tema de farmácia que
+ * usa vermelho de marca ensina o cliente a ignorar a única cor da tela que ele
+ * precisava ler. Por isso a paleta inteira é fria e vermelho só existe em
+ * `.ui-tarja`. Se aparecer vermelho fora dela, é engano.
+ *
+ * ── POR QUE O CORPO É O MAIOR DO CONJUNTO ────────────────────────────────
+ * Farmácia tem a base de clientes mais velha do e-commerce brasileiro, e o
+ * dado que decide a compra é justamente o de corpo pequeno: "500 mg" e
+ * "5 mg" diferem por um caractere. Daí o `font-size` de raiz em 17px — como a
+ * escala do Tailwind é em `rem`, texto, espaçamento e área de toque crescem
+ * juntos, em vez de virar texto grande espremido em botão pequeno.
+ *
+ * `Atkinson Hyperlegible` carrega justamente esses dados: foi desenhada pelo
+ * Braille Institute para desambiguar caractere parecido, que é exatamente o
+ * problema de ler dosagem. Ela NÃO é a fonte de corpo — em parágrafo longo as
+ * particularidades dela cansam. Corpo é `Source Sans 3`.
+ *
+ * ATENÇÃO — `customCode.css` do CMS não funciona hoje (o `<style>` do
+ * `Base.astro` no pacote não interpola a expressão). Fontes definidas aqui e
+ * carregadas pelo `htmlHead` de `content/layout.json`.
+ */
+
+:root {
+  --custom-font-sans: 'Source Sans 3';
+  --font-brand: 'Atkinson Hyperlegible', 'Source Sans 3', sans-serif;
+}
+
+/*
+ * 17px de raiz. Ver o bloco de cima: é a decisão de acessibilidade do tema,
+ * não um ajuste solto. Mexer aqui muda o tamanho de tudo.
+ */
 html {
+  font-size: 17px;
   scroll-behavior: smooth;
 }
 body {
@@ -16,58 +73,101 @@ a, button, button > *, [role=button], [role=button] > * {
 }
 
 .ui-link {
-  @apply font-medium text-primary underline underline-offset-4
+  @apply font-semibold text-primary underline underline-offset-4
   hover:text-primary-bold active:text-primary-subtle;
 }
 
+/*
+ * Botões sem caixa alta, ao contrário da maioria do conjunto: CAIXA ALTA custa
+ * legibilidade porque apaga a silhueta da palavra, e este é o tema em que essa
+ * conta não fecha. `py` mais generoso pelo mesmo motivo — área de toque.
+ */
 [class*=ui-btn] {
-  @apply inline-block text-base font-medium px-4 py-2 rounded
-  border-2 border-transparent underline-offset-4 decoration-2
-  shadow focus:ring-1 focus:ring-offset-1 active:ring-2;
+  @apply inline-block text-base font-bold
+  px-5 py-2.5 rounded border-2 border-transparent
+  focus:ring-2 focus:ring-offset-1 active:ring-2;
 }
-.ui-btn-sm {
-  @apply text-sm px-3 py-1.5 border-1;
-}
-.ui-btn-lg {
-  @apply text-lg font-bold px-6 py-3 lg:text-base lg:py-2.5 active:ring-3;
-}
-.ui-btn-primary {
-  @apply primary border-primary hover:primary-bold ring-primary/30;
-}
+.ui-btn-sm { @apply text-sm px-4 py-2 border-1; }
+.ui-btn-lg { @apply text-lg px-8 py-3.5; }
+.ui-btn-primary { @apply primary border-primary hover:primary-bold ring-primary/30; }
 .ui-btn-secondary {
-  @apply bg-secondary-100/50 text-secondary border-secondary
-  hover:secondary ring-secondary/30;
+  @apply bg-secondary text-white border-secondary
+  hover:bg-secondary-700 ring-secondary/40;
 }
 .ui-btn-contrast {
-  @apply bg-white text-primary hover:bg-primary-100 ring-white/30
-  decoration-primary-300 underline shadow-none;
+  @apply bg-white text-secondary border-white hover:bg-base-100 ring-white/30 shadow-none;
 }
 .ui-btn-danger {
   @apply bg-danger-50 text-danger-700 border-danger-100
-  hover:bg-danger-600 hover:text-white
-  hover:border-danger-600 ring-danger-600/30;
+  hover:bg-danger-600 hover:text-white hover:border-danger-600 ring-danger-600/30;
 }
 
 .ui-text-brand, .ui-title {
-  @apply font-brand font-black italic;
+  @apply font-brand font-bold not-italic tracking-[-0.01em];
 }
+/*
+ * SEM cor: `.ui-title` herda. Foi tentado `text-secondary` e o título do hero
+ * sumiu — o `HeroSlider` do pacote pinta o painel com `secondary`, então o
+ * título ficava azul-petróleo sobre azul-petróleo. O subtítulo, que não tem
+ * cor própria, continuava legível, e por isso o defeito não aparecia em
+ * nenhuma leitura de código: só no print.
+ *
+ * Onde o título precisa de cor, quem aplica é o componente (`PageTitle.vue`
+ * já faz isso).
+ */
 .ui-title {
-  @apply text-3xl xl:text-5xl text-balance;
+  @apply text-3xl xl:text-5xl leading-[1.08] text-balance;
+}
+
+/*
+ * ── TARJA ────────────────────────────────────────────────────────────────
+ * O átomo do tema, e o único lugar com cor saturada fora da marca. É uma FAIXA
+ * horizontal, não uma pílula, porque é isso que ela é na caixa de verdade — a
+ * forma já carrega metade da informação para quem conhece o nicho.
+ *
+ * Nunca depende só da cor: cada tarja traz texto próprio. Daltonismo vermelho-
+ * verde atinge cerca de 8% dos homens, e "vermelha ou preta" é distinção que
+ * some para muita gente.
+ */
+.ui-tarja {
+  @apply block w-full py-1 text-center font-brand text-[0.6875rem] font-bold
+  uppercase leading-none tracking-[0.08em];
+}
+.ui-tarja-vermelha { @apply bg-[#c62828] text-white; }
+.ui-tarja-preta { @apply bg-base-950 text-white; }
+/* Isento de prescrição: faixa clara, presente pela consistência da leitura. */
+.ui-tarja-livre { @apply bg-base-100 text-base-600; }
+
+/*
+ * ── PRINCÍPIO ATIVO ──────────────────────────────────────────────────────
+ * Vem ANTES do nome comercial no card, e é a inversão que define o tema. O
+ * cliente aprende a ler a substância aqui e reconhece a mesma linha na seção
+ * de equivalentes, no filtro e na ficha.
+ *
+ * `tabular-nums` porque a dosagem é número e precisa alinhar de uma linha para
+ * a outra quando três equivalentes aparecem empilhados.
+ */
+.ui-ativo {
+  @apply block font-brand text-sm font-bold leading-tight tracking-tight
+  text-primary tabular-nums;
+}
+
+/*
+ * Linha de economia do equivalente. Verde é reservado a ela justamente porque
+ * não é cor de marca aqui: quando aparece, quer dizer uma coisa só.
+ */
+.ui-economia {
+  @apply inline-flex items-center gap-1 rounded-sm bg-success-50 px-2 py-0.5
+  text-sm font-bold leading-tight text-success-700;
 }
 
 [class*=ui-badge] {
-  @apply text-center px-2.5 py-0.5 rounded-md font-semibold
-  inline-block bg-secondary-200 text-secondary-900;
+  @apply text-center px-2 py-0.5 rounded-sm text-sm font-bold
+  inline-block bg-secondary text-white;
 }
-[class*=ui-badge-pill] {
-  @apply text-sm leading-relaxed py-0 rounded-full;
-}
-.ui-badge-pill-sm {
-  @apply text-xs min-w-[1rem] px-0.5;
-}
-.ui-badge-pill-lg {
-  @apply text-lg min-w-[1.75rem] px-2;
-}
+[class*=ui-badge-pill] { @apply leading-relaxed py-0 rounded-full; }
+.ui-badge-pill-sm { @apply text-xs min-w-[1rem] px-0.5; }
+.ui-badge-pill-lg { @apply text-lg min-w-[1.75rem] px-2; }
 
 .ui-alert {
   @apply bg-warning-100 text-warning-800 border-warning-200
@@ -77,11 +177,7 @@ a, button, button > *, [role=button], [role=button] > * {
 [class*=ui-section] {
   @apply w-full mx-auto px-[1px] max-w-[calc(100vw-2rem)]
   sm:max-w-[calc(100vw-3rem)] md:max-w-[calc(100vw-4rem)]
-  xl:max-w-[min(80rem,calc(100vw-6rem))];
+  xl:max-w-[min(80rem,calc(100vw-4rem))];
 }
-.ui-section {
-  @apply my-6 md:my-8;
-}
-.ui-section-slim {
-  @apply my-3;
-}
+.ui-section { @apply my-5 md:my-8; }
+.ui-section-slim { @apply my-2; }

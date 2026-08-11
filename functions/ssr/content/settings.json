@@ -1,10 +1,11 @@
 {
-  "domain": "demo.ecomplus.app",
-  "name": "e-com.plus demoStore",
-  "description": "e-com.plus é a plataforma de e-commerce API-first desenhada para modelos de negócio e experiências de compra únicas. Flexibilidade do código aberto com facilidade de SaaS para que você comece rápido, venda do seu jeito e escale sem limitações.",
-  "logo": "/img/uploads/logo.png",
-  "icon": "/img/uploads/ecom-icon.png",
-  "primaryColor": "#37003c",
+  "domain": "bula.demo.ecomplus.app",
+  "name": "Bula",
+  "description": "Farmácia com o princípio ativo escrito antes do nome comercial: cada anúncio mostra a substância, a dosagem, a tarja e quanto custa o equivalente mais barato. Variante de vitrine da e-com.plus para o nicho de farmácia e saúde.",
+  "logo": "/img/uploads/logo-bula.png",
+  "icon": "/img/uploads/icon-bula.png",
+  "primaryColor": "#00868f",
+  "secondaryColor": "#00303a",
   "email": "",
   "phone": "",
   "address": "",
@@ -62,7 +63,7 @@
       }
     },
     "calculate_shipping": {
-      "free_shipping_from_value": 200
+      "free_shipping_from_value": 120
     }
   }
 }

@@ -1,41 +1,57 @@
 {
-  "metaTitle": "",
-  "metaDescription": "",
+  "metaTitle": "Bula — o princípio ativo antes do nome comercial",
+  "metaDescription": "Substância, dosagem e tarja em cada anúncio, e quanto custa o equivalente mais barato. Uso contínuo com reposição programada.",
   "hero": {
     "autoplay": 9000,
     "slides": [
       {
         "startsAt": "",
         "endsAt": "",
-        "img": "/img/uploads/rect89.webp",
-        "alt": "Headset banner",
-        "mobileImg": "/img/uploads/headphone.webp",
-        "href": "/headset",
-        "title": "20% off on first purchase",
-        "subtitle": "At demoStore you can shop the best tech of 2023. Enjoy and get 10% off on your first purchase!",
-        "buttonLink": "/",
-        "buttonText": "See"
+        "img": "/img/uploads/hero-equivalencia-desk.jpg",
+        "alt": "Caixas e cartelas de medicamento de cores diferentes",
+        "mobileImg": "/img/uploads/hero-equivalencia-mob.jpg",
+        "href": "",
+        "title": "O mesmo remédio, três preços",
+        "subtitle": "Genérico e similar têm a mesma substância na mesma dosagem. Mostramos os três lado a lado, com o preço de cada um.",
+        "buttonLink": "/p/generico",
+        "buttonText": "Entender a diferença"
       },
       {
         "startsAt": "",
         "endsAt": "",
-        "img": "/img/uploads/rect859.png",
-        "alt": "",
-        "mobileImg": "",
+        "img": "/img/uploads/hero-receita-desk.jpg",
+        "alt": "Cliente sendo atendida por farmacêutica no balcão",
+        "mobileImg": "/img/uploads/hero-receita-mob.jpg",
         "href": "",
-        "title": "",
-        "subtitle": "",
-        "buttonLink": "",
-        "buttonText": ""
+        "title": "Item com tarja, sem surpresa",
+        "subtitle": "O card já diz se precisa de receita. Você envia depois de fechar o pedido, e um farmacêutico confere antes de separar.",
+        "buttonLink": "/p/receita",
+        "buttonText": "Como funciona"
+      },
+      {
+        "startsAt": "",
+        "endsAt": "",
+        "img": "/img/uploads/hero-continuo-desk.jpg",
+        "alt": "Porta-comprimidos semanal sendo preenchido",
+        "mobileImg": "/img/uploads/hero-continuo-mob.jpg",
+        "href": "",
+        "title": "Uso contínuo chega antes de acabar",
+        "subtitle": "Reposição programada no ritmo da própria cartela: 30 comprimidos, 30 dias. Você pausa e cancela sozinho.",
+        "buttonLink": "/cuidado-continuo",
+        "buttonText": "Ver uso contínuo"
       }
     ]
   },
   "sections": [
     {
+      "type": "c:equivalente",
+      "title": "O mesmo remédio, mais barato"
+    },
+    {
       "type": "product-shelf",
       "collectionIdAndInfo": null,
-      "sort": "-price_discount,-sales",
-      "title": "",
+      "sort": "-sales",
+      "title": "Os mais levados",
       "isHeadless": false,
       "isShuffle": false,
       "limit": 12,
@@ -45,19 +61,44 @@
       "type": "banners-grid",
       "banners": [
         {
-          "img": "/img/uploads/rect8589.png",
-          "href": ""
+          "img": "/img/uploads/banner-dor.jpg",
+          "alt": "Comprimidos brancos em cartela sobre superfície clara",
+          "href": "/farmacinha",
+          "title": "Dor e febre",
+          "subtitle": "Analgésico e antitérmico de venda livre"
         },
         {
-          "img": "/img/uploads/passion.webp",
-          "href": ""
+          "img": "/img/uploads/banner-gripe.jpg",
+          "alt": "Spray nasal e lenços de papel em caixa azul",
+          "href": "/farmacinha",
+          "title": "Gripe e alergia",
+          "subtitle": "Descongestionante, spray nasal e lenço"
         },
         {
-          "img": "/img/uploads/rect89.webp",
-          "href": "",
-          "mobileImg": "/img/uploads/headphone.webp"
+          "img": "/img/uploads/banner-pressao.jpg",
+          "alt": "Aparelho de medir pressão sendo usado no braço",
+          "href": "/cuidado-continuo",
+          "title": "Pressão e glicemia",
+          "subtitle": "Aparelhos, tiras e o que repõe todo mês"
+        },
+        {
+          "img": "/img/uploads/banner-vitaminas.jpg",
+          "alt": "Fileira de frascos de vitaminas",
+          "href": "/cuidado-continuo",
+          "title": "Vitaminas e uso diário",
+          "subtitle": "Suplementação e cuidado de rotina"
         }
       ]
+    },
+    {
+      "type": "product-shelf",
+      "collectionIdAndInfo": null,
+      "sort": "-price_discount",
+      "title": "Em promoção",
+      "isHeadless": false,
+      "isShuffle": false,
+      "limit": 12,
+      "page": 1
     }
   ]
 }

@@ -10,6 +10,7 @@ import PageTitleSection from '~/sections/PageTitleSection.astro';
 import ProductShelfSection from '~/sections/ProductShelfSection.astro';
 import ProductDetailsSection from '~/sections/ProductDetailsSection.astro';
 import SearchShowcaseSection from '~/sections/SearchShowcaseSection.astro';
+import EquivalenteSection from '~/sections/EquivalenteSection.astro';
 
 const { routeContext } = Astro.locals;
 const { sections } = await usePageSections({
@@ -56,6 +57,8 @@ cause route resource is required to define sections from content. */
         return <SearchShowcaseSection {...props} />;
       case 'product-details':
         return <ProductDetailsSection {...props} />;
+      case 'c:equivalente':
+        return <EquivalenteSection {...props} />;
       case 'c:foo':
         return <div data-foo={props.foo}></div>;
       default:

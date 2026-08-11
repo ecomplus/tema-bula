@@ -6,43 +6,57 @@
   },
   "customCode": {
     "css": "",
-    "htmlHead": "",
+    "htmlHead": "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap\">",
     "htmlBody": ""
   },
   "header": {
     "pitchBar": [
       {
-        "href": "/promotion",
-        "html": "Aproveite nossos descontos de até 50%!"
+        "href": "/p/generico",
+        "html": "<b>Genérico é o mesmo remédio</b> <d-md>mesma substância, mesma dosagem, preço menor</d-md>"
+      },
+      {
+        "href": "/p/receita",
+        "html": "<b>Item com tarja pede receita</b> <d-md>você envia depois de fechar o pedido</d-md>"
+      },
+      {
+        "href": "/cuidado-continuo",
+        "html": "<b>Uso contínuo com reposição programada</b> <d-md>chega antes da cartela acabar</d-md>"
       },
       {
         "href": "",
-        "html": "<b>Frete grátis</b> <d-md>para todo Brasil</d-md> a partir de {free_shipping_from_value}"
+        "html": "<b>Frete grátis</b> <d-md>para todo o Brasil</d-md> a partir de {free_shipping_from_value}"
       }
     ],
     "inlineMenuCategories": {
-      "featured": [],
-      "random": 7
+      "featured": [
+        "farmacinha",
+        "cuidado-continuo"
+      ],
+      "random": 0
     },
-    "isAlphabeticalSortSubmenu": false
+    "isAlphabeticalSortSubmenu": true
   },
   "footer": {
     "categoriesList": {
       "isActive": true,
-      "title": "",
-      "slugs": []
+      "title": "Categorias",
+      "slugs": [
+        "farmacinha",
+        "cuidado-continuo"
+      ]
     },
     "pagesList": {
       "isActive": true,
-      "title": "",
+      "title": "Ajuda",
       "links": []
     },
     "stamps": [
       {
         "img": "",
-        "alt": "Troca garantida",
-        "icon": "exchange",
-        "href": "/p/trocas"
+        "alt": "Farmacêutico responsável",
+        "icon": "check",
+        "href": "/p/receita"
       },
       {
         "img": "",

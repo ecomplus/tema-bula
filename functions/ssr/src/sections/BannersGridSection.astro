@@ -1,27 +1,75 @@
 ---
 import type { CmsFields, InferCmsOutput } from '@@sf/content';
 import { bannerListCmsField } from '@@sf/composables/use-banner';
-import BannerPictures from '@@sf/components/BannerPictures.astro';
-import Banner from '~/components/Banner.vue';
+import Picture from '@@sf/components/Picture.astro';
 
+/*
+ * Grade de banners — variante Bula (farmácia e saúde).
+ *
+ * NÃO usa o `Banner.vue` do starter. Com `title`/`subtitle` preenchidos ele
+ * vira um grid de duas colunas com `p-12 xl:ps-32`, dimensionado para largura
+ * total. Numa coluna de 1/3 o texto quebra UMA PALAVRA POR LINHA e a imagem
+ * some — defeito já documentado na Bitola e repetido em todas as variantes da
+ * segunda leva.
+ *
+ * ── POR QUE O TEXTO NÃO FICA SOBRE A FOTO ────────────────────────────────
+ * As outras variantes põem o rótulo por cima da imagem, com gradiente. Aqui
+ * não: o contraste de texto sobre foto depende do que a foto tem naquele
+ * ponto, e é o primeiro lugar em que a legibilidade cai quando alguém troca a
+ * imagem pelo CMS. Este é o tema em que essa conta não fecha (ver o bloco
+ * sobre corpo grande em `assets/style.css`), então o rótulo desce para uma
+ * faixa sólida embaixo, onde o contraste é o mesmo sempre.
+ */
 export const cmsFields = ({
-  banners: {
-    required: true,
-    ...bannerListCmsField,
-  },
+  banners: { required: true, ...bannerListCmsField },
 }) as const satisfies CmsFields;
 
 export type Props = InferCmsOutput<typeof cmsFields>;
 const { banners = [] } = Astro.props;
+
+/*
+ * O número de colunas segue a quantidade cadastrada, em vez de ser fixo em 3:
+ * com quatro banners e `sm:grid-cols-3` o quarto cai sozinho numa linha,
+ * ocupando um terço da largura ao lado de dois vazios.
+ */
+const colunas = banners.length % 4 === 0
+  ? 'sm:grid-cols-2 lg:grid-cols-4'
+  : 'sm:grid-cols-3';
 ---
 
 <section class="ui-section">
-  <ul class="flex flex-wrap gap-4 lg:flex-nowrap">
+  <ul class:list={['grid grid-cols-1 gap-4', colunas]}>
     {banners.map((banner) => (
-      <li class="lg:flex-1 [&_img]:w-full [&_img]:object-cover">
-        <Banner {...banner}>
-          <BannerPictures {...banner} slot="picture" />
-        </Banner>
+      <li>
+        <a
+          href={banner.href || '#'}
+          class="group block h-full overflow-hidden rounded border-2
+          border-base-200 bg-white transition hover:border-primary"
+        >
+          <Picture
+            src={banner.img}
+            alt={banner.alt || ''}
+            widths={[400, 640, 828]}
+            sizes="(min-width: 640px) 33vw, 100vw"
+            loading="lazy"
+            class="aspect-[4/3] w-full object-cover transition-transform
+            duration-500 md:group-hover:scale-105"
+          />
+          {(banner.title || banner.subtitle) && (
+            <div class="px-4 py-3">
+              {banner.title && (
+                <h3 class="ui-text-brand text-lg leading-tight text-secondary">
+                  {banner.title}
+                </h3>
+              )}
+              {banner.subtitle && (
+                <p class="mt-1 text-sm leading-snug text-base-600">
+                  {banner.subtitle}
+                </p>
+              )}
+            </div>
+          )}
+        </a>
       </li>
     ))}
   </ul>

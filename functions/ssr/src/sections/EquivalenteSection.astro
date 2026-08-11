@@ -1,0 +1,246 @@
+---
+/*
+ * Seção "o mesmo remédio, mais barato" — a peça que justifica esta variante
+ * existir.
+ *
+ * ── O QUE ELA RESOLVE ────────────────────────────────────────────────────
+ * O cliente de farmácia chega com um nome comercial: é o que está escrito na
+ * receita, na caixa que acabou ou na lembrança do que o médico falou. Ele não
+ * sabe — e não tem por que saber — que aquele nome é uma marca, e que a mesma
+ * substância na mesma dosagem existe com outros três rótulos e metade do
+ * preço.
+ *
+ * Nenhuma outra variante do conjunto tem esse problema. Nas outras, procurar
+ * bem leva ao produto certo. Aqui, procurar bem leva a um produto que não é o
+ * que o cliente deveria levar.
+ *
+ * ── POR QUE É UMA TABELA DE IDENTIDADE, NÃO DE COMPARAÇÃO ────────────────
+ * A Cadência compara produtos DIFERENTES para escolher um; o que interessa lá
+ * é a linha que muda. Aqui é o contrário: o argumento é que substância,
+ * dosagem e forma são IGUAIS, e a única linha que muda é o preço. Por isso a
+ * tabela repete as três primeiras colunas em vez de escondê-las — a repetição
+ * é a mensagem.
+ *
+ * ── ⚠️ DADOS FIXOS ───────────────────────────────────────────────────────
+ * Os grupos abaixo estão chumbados no template. Ligar de verdade = agrupar o
+ * catálogo por `specifications.principio_ativo` + `specifications.dosagem` e
+ * ordenar por preço. A nota de rodapé diz isso ao visitante. MANTER.
+ *
+ * A busca do campo vai para `/s?q=`, e não para `/s/<termo>`: a rota com
+ * parâmetro no caminho não é pré-renderizada no build estático.
+ */
+export type Props = {
+  title?: string;
+  cmsPreview?: Record<string, any>;
+};
+
+const { title = 'O mesmo remédio, mais barato' } = Astro.props;
+
+/*
+ * Substâncias escolhidas entre as de venda livre (MIP) de maior giro. Nenhuma
+ * exige receita: uma seção que sugere trocar de marca precisa tratar só do que
+ * o cliente pode decidir sozinho — havendo prescrição, a troca é de quem
+ * prescreve. Ver `/p/generico`.
+ */
+const grupos = [
+  {
+    id: 'dipirona',
+    substancia: 'Dipirona sódica',
+    dosagem: '500 mg',
+    forma: 'Comprimido, 10 un.',
+    itens: [
+      { rotulo: 'Referência', marca: 'Marca de origem', preco: 1890 },
+      { rotulo: 'Similar', marca: 'Laboratório nacional', preco: 1190 },
+      { rotulo: 'Genérico', marca: 'Sem marca, com o nome da substância', preco: 890 },
+    ],
+  },
+  {
+    id: 'ibuprofeno',
+    substancia: 'Ibuprofeno',
+    dosagem: '400 mg',
+    forma: 'Comprimido, 20 un.',
+    itens: [
+      { rotulo: 'Referência', marca: 'Marca de origem', preco: 3250 },
+      { rotulo: 'Similar', marca: 'Laboratório nacional', preco: 2190 },
+      { rotulo: 'Genérico', marca: 'Sem marca, com o nome da substância', preco: 1490 },
+    ],
+  },
+  {
+    id: 'omeprazol',
+    substancia: 'Omeprazol',
+    dosagem: '20 mg',
+    forma: 'Cápsula, 28 un.',
+    itens: [
+      { rotulo: 'Referência', marca: 'Marca de origem', preco: 4790 },
+      { rotulo: 'Similar', marca: 'Laboratório nacional', preco: 2890 },
+      { rotulo: 'Genérico', marca: 'Sem marca, com o nome da substância', preco: 1990 },
+    ],
+  },
+];
+
+const real = (centavos: number) => (centavos / 100)
+  .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+/*
+ * A economia é calculada no build, não no cliente: é número, e número na tela
+ * não pode depender de o JavaScript ter carregado.
+ */
+const dados = grupos.map((g) => {
+  const precos = g.itens.map((i) => i.preco);
+  const caro = Math.max(...precos);
+  const barato = Math.min(...precos);
+  return {
+    ...g,
+    barato,
+    economia: Math.round(((caro - barato) / caro) * 100),
+  };
+});
+---
+
+<section class="ui-section" data-equivalente>
+  <div class="rounded border-2 border-base-200 bg-base-50 p-5 md:p-8">
+    <h2 class="ui-text-brand text-2xl leading-tight text-secondary md:text-3xl">
+      {title}
+    </h2>
+    <p class="mt-3 max-w-3xl leading-relaxed text-base-700">
+      Genérico e similar têm a <strong>mesma substância, na mesma dosagem</strong>,
+      e são testados para agir igual. Muda o rótulo e muda o preço.
+      <a href="/p/generico" class="ui-link">Entenda a diferença</a>.
+    </p>
+
+    <!-- Busca pela substância, que é como o cliente deveria poder procurar. -->
+    <form action="/s" method="get" class="mt-5 flex max-w-xl flex-wrap gap-2">
+      <label for="EquivalenteBusca" class="sr-only">
+        Buscar por princípio ativo
+      </label>
+      <input
+        id="EquivalenteBusca"
+        type="search"
+        name="q"
+        placeholder="Digite a substância. Ex.: dipirona"
+        class="min-w-0 grow rounded border-2 border-base-300 bg-white px-4 py-2.5
+        text-base text-base-900 placeholder:text-base-400
+        focus:border-primary focus:outline-none"
+      />
+      <button type="submit" class=":uno: ui-btn ui-btn-primary">Buscar</button>
+    </form>
+
+    <div class="mt-8">
+      <p class="mb-2 text-sm font-semibold text-base-600">
+        Ou veja um exemplo:
+      </p>
+      <div class="flex flex-wrap gap-2" role="tablist" aria-label="Substâncias">
+        {dados.map((g, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`aba-${g.id}`}
+            aria-controls={`painel-${g.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            data-equivalente-aba={g.id}
+            class="rounded border-2 px-4 py-2 text-sm font-bold transition
+            aria-selected:border-primary aria-selected:bg-primary
+            aria-selected:text-white border-base-300 bg-white text-base-700
+            hover:border-primary"
+          >
+            {g.substancia} {g.dosagem}
+          </button>
+        ))}
+      </div>
+
+      {dados.map((g, i) => (
+        <div
+          id={`painel-${g.id}`}
+          role="tabpanel"
+          aria-labelledby={`aba-${g.id}`}
+          data-equivalente-painel={g.id}
+          hidden={i !== 0}
+          class="mt-5"
+        >
+          <p class="text-sm text-base-600">
+            <strong class="text-base-900">{g.substancia} {g.dosagem}</strong>
+            {' '}— {g.forma}. As três caixas abaixo têm a mesma substância, na
+            mesma dosagem, na mesma apresentação.
+          </p>
+
+          <div class="mt-3 overflow-x-auto">
+            <table class="w-full min-w-[34rem] border-collapse text-left">
+              <thead>
+                <tr class="border-b-2 border-base-200">
+                  <th class="py-2 pr-3 text-sm font-bold text-base-600">Tipo</th>
+                  <th class="py-2 pr-3 text-sm font-bold text-base-600">Substância</th>
+                  <th class="py-2 pr-3 text-sm font-bold text-base-600">Dosagem</th>
+                  <th class="py-2 text-right text-sm font-bold text-base-600">Preço</th>
+                </tr>
+              </thead>
+              <tbody>
+                {g.itens.map((item) => (
+                  <tr
+                    class="border-b border-base-200"
+                    class:list={[item.preco === g.barato && 'bg-success-50']}
+                  >
+                    <td class="py-2.5 pr-3">
+                      <span class="block font-bold text-base-900">{item.rotulo}</span>
+                      <span class="block text-sm text-base-600">{item.marca}</span>
+                    </td>
+                    {/* As duas colunas do meio repetem de propósito: a
+                        repetição é o argumento da seção. */}
+                    <td class="py-2.5 pr-3 text-base-800">{g.substancia}</td>
+                    <td class="py-2.5 pr-3 tabular-nums text-base-800">{g.dosagem}</td>
+                    <td class="py-2.5 text-right">
+                      <span
+                        class="font-brand text-lg font-bold tabular-nums"
+                        class:list={[item.preco === g.barato ? 'text-success-700' : 'text-base-900']}
+                      >{real(item.preco)}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p class="mt-3">
+            <span class="ui-economia">
+              Até {g.economia}% de diferença pela mesma substância
+            </span>
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <p class="mt-6 border-t border-base-200 pt-4 text-sm leading-relaxed text-base-600">
+      Demonstração de tema: os grupos acima são fixos. Numa loja em operação
+      eles saem do próprio catálogo, agrupando por princípio ativo e dosagem
+      cadastrados no produto. Genérico e similar não substituem orientação de
+      quem prescreve — havendo receita, a troca é decisão médica.
+    </p>
+  </div>
+</section>
+
+<script>
+  /*
+   * Troca de aba. Usa o atributo `hidden` e `aria-selected`, e não uma classe
+   * utilitária: o UnoCSS varre `./src/**` e classe aplicada só por JS não
+   * geraria CSS nenhum.
+   *
+   * O painel é uma `<div>` sem classe `ui-*` de propósito. `.ui-spec` aplica
+   * `inline-flex` e vence o `[hidden] { display: none }` do reset no desempate
+   * por ordem — armadilha que já custou uma rodada na Cadência.
+   */
+  const secao = document.querySelector('[data-equivalente]');
+  if (secao) {
+    const abas = secao.querySelectorAll<HTMLButtonElement>('[data-equivalente-aba]');
+    const paineis = secao.querySelectorAll<HTMLElement>('[data-equivalente-painel]');
+    abas.forEach((aba) => {
+      aba.addEventListener('click', () => {
+        const alvo = aba.dataset.equivalenteAba;
+        abas.forEach((a) => {
+          a.setAttribute('aria-selected', String(a.dataset.equivalenteAba === alvo));
+        });
+        paineis.forEach((p) => {
+          p.hidden = p.dataset.equivalentePainel !== alvo;
+        });
+      });
+    });
+  }
+</script>
